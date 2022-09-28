@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album</title>
+</head>
+<style>
+
+    tbody{
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .tem{
+        background-color: green;;
+    }
+
+    .cell{
+        height: 50px;
+        width: 80px;
+        cursor: pointer;
+    }
+</style>
+<body>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    window.addEventListener("load", function(event) {
+        socket.emit('con')
+    });
+    const times = ['qua','ecu','sen','ned','eng','irn','usa','wal','arg','ksa','mex','pol','fra','aus','den','tun','esp','crc','ger','jpn','bel','can','mar','cro','bra','srb','sui','cmr','por','gha','uru','kor']
+    
+    function createTable(){
+        const body = document.body
+        tbl = document.createElement('table');
+
+        for(let i = 0; i < 32; i++){
+            const tr = tbl.insertRow();
+            for (let j = 1; j <= 20; j++) {
+                const td = tr.insertCell();
+                td.setAttribute('id', times[i] + ''+ j)
+                td.classList.add('cell')
+                td.onclick = function(){socket.emit('chat message', times[i] + ''+ j);}
+                td.appendChild(document.createTextNode(times[i] + ' '+ j));
+                td.style.border = '1px solid black';
+            }
+        }
+        for (let j = 1; j <= 26; j++) {
+            const tr = tbl.insertRow();
+                const td = tr.insertCell();
+                td.setAttribute('id', 'fwc '+ j)
+                td.classList.add('cell')
+                td.onclick = function(){socket.emit('chat message', 'fwc' + ''+ j);}
+                td.appendChild(document.createTextNode('fwc '+ j));
+                td.style.border = '1px solid black';
+            }
+        body.appendChild(tbl);
+    }
+
+    socket.on('chat message', function(msg){
+        console.log(msg)
+        document.getElementById(msg).style.backgroundColor = "green";
+    });
+
+
+    socket.on('att', function(figurinha){
+        console.log(figurinha)
+        for(let i = 0; i < figurinha.length; i++){
+            document.getElementById(figurinha[i].id).style.backgroundColor = "green";
+        }
+    });
+
+
+
+    createTable()
+</script>
+</html>
